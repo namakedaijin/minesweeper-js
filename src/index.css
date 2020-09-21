@@ -1,0 +1,97 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#main {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1%;
+  width: 80%;
+  text-align: center;
+}
+
+.minesweeper {
+  border: 4px solid #222222;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  background-color: #222222;
+}
+
+#wrapper {
+  display: inline-block;
+}
+
+.board {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  box-sizing: border-box;
+}
+
+.opened_cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222222;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #525252;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.closed_cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222222;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #87ceeb;
+}
+
+.hasMine_cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222222;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #f7343d;
+}
+
+.hasFlag_cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222222;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #1ed637;
+}
+
+.status_bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.timer, .flag_counter{
+  width: 48px;
+  height: 24px;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.reset_button {
+  width: 48px;
+  height: 24px;
+  mask: url("restart.svg") no-repeat center center;
+}
