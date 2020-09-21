@@ -34,7 +34,6 @@ export default class Board extends React.Component{
     }
 
     openCell = (clickedCell) => {
-        this.props.onCellClicked();
         let copyBoard = this.getCopyBoard();
         let cell = copyBoard[clickedCell.y][clickedCell.x];
         if(this.props.openedCells === 0 && !this.props.run){
@@ -46,23 +45,25 @@ export default class Board extends React.Component{
                 this.openRecursive(copyBoard, cell);
             }
             this.updateBoardState(copyBoard);
+            this.props.onCellClicked();
         }
     }
 
     openRecursive = (copyBoard, cell) => {
-        if(cell.number === 0){
-            for(let i = -1; i <= 1; i++){
-                for(let j = -1; j <= 1; j++){
-                    if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
-                        &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
-                        &&(i != 0 || j != 0)){
-                            let aroundCell = copyBoard[cell.y+i][cell.x+j];
-                            if(!aroundCell.isOpened && !aroundCell.hasFlag){
-                                aroundCell.isOpened = true;
+        for(let i = -1; i <= 1; i++){
+            for(let j = -1; j <= 1; j++){
+                if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
+                    &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
+                    &&(i != 0 || j != 0)){
+                        let aroundCell = copyBoard[cell.y+i][cell.x+j];
+                        if(!aroundCell.isOpened && !aroundCell.hasFlag){
+                            aroundCell.isOpened = true;
+                            this.props.onCellClicked();
+                            if(aroundCell.number === 0){
                                 this.openRecursive(copyBoard, aroundCell);
                             }
                         }
-                }
+                    }
             }
         }
     }
@@ -102,19 +103,7 @@ export default class Board extends React.Component{
         let copyBoard = this.getCopyBoard();
         let cell = copyBoard[clickedCell.y][clickedCell.x];
         if(this.countAroundFlag(copyBoard, cell) === cell.number){
-            for(let i = -1; i <= 1; i++){
-                for(let j = -1; j <= 1; j++){
-                    if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
-                        &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
-                        &&(i != 0 || j != 0)){
-                            let aroundCell = copyBoard[cell.y+i][cell.x+j];
-                            if(!aroundCell.isOpened && !aroundCell.hasFlag){
-                                aroundCell.isOpened = true;
-                                this.openRecursive(copyBoard, aroundCell);
-                            }
-                        }
-                }
-            }
+            this.openRecursive(copyBoard, cell);
             this.updateBoardState(copyBoard);
         }
     }
@@ -158,7 +147,7 @@ export default class Board extends React.Component{
         this.setState({board: nextBoard});
     }
 
-    componentWillUpdate = (nextProps) => {
+    componentWillUpdate = (nextProps, nextState) => {
         if(this.props.openedCells != 0 && nextProps.openedCells == 0){
             this.reset(nextProps);
         }
@@ -166,7 +155,8 @@ export default class Board extends React.Component{
 
     shouldComponentUpdate(nextProps, nextState){
         return !_.isEqual(nextState.board, this.state.board)
-                ||(this.props.openedCells!=nextProps.openedCells);
+                ||(this.props.openedCells!=nextProps.openedCells)
+                ||(this.props.run!=nextProps.run);
     }
 
     render(){

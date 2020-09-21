@@ -1,6 +1,7 @@
 import React from 'react';
 import Board from './components/Board';
 import Statusbar from './components/Statusbar';
+import Message from './components/Message';
 
 export default class MineSweeper extends React.Component{
   constructor(){
@@ -12,7 +13,8 @@ export default class MineSweeper extends React.Component{
       flags: 10,
       time: 0,
       run: false,
-      openedCells: 0
+      openedCells: 0,
+      status: ""
     };
   }
 
@@ -24,7 +26,9 @@ export default class MineSweeper extends React.Component{
       flags: 10,
       time: 0,
       run: false,
-      openedCells: 0}
+      openedCells: 0,
+      status: ""
+      }
     );
   }
 
@@ -35,6 +39,7 @@ export default class MineSweeper extends React.Component{
       });
     }
     if(!this.state.run && this.state.openedCells == 0){
+      clearInterval(this.timer);
       this.timer = setInterval(this.timeIncrement, 1000);
       this.setState((state) => {
         return {run: true,
@@ -57,6 +62,11 @@ export default class MineSweeper extends React.Component{
     }
   }
 
+  winAction = () => {
+    this.setState({run: false, status: "win"});
+    clearInterval(this.timer);
+  }
+
   timeIncrement = () => {
     this.setState((state) => {
       return {time: state.time + 1};
@@ -67,6 +77,13 @@ export default class MineSweeper extends React.Component{
     clearInterval(this.timer);
     this.initialize();
   }
+
+  componentWillUpdate = (nextProps, nextState) => {
+    if((nextState.openedCells === (this.state.rows*this.state.colums-this.state.mines))&&nextState.run){
+        this.winAction();
+    }
+    console.log(nextState.openedCells, this.state.rows*this.state.colums-this.state.mines, nextState.run);
+}
 
   render(){
     return(
@@ -79,12 +96,14 @@ export default class MineSweeper extends React.Component{
             openedCells={this.state.openedCells}
             run={this.state.run}
             onCellClicked={this.onCellClicked}
-            onCellRightClicked={this.onCellRightClicked}/>
+            onCellRightClicked={this.onCellRightClicked}
+            winAction={this.winAction}/>
           <Statusbar 
             time={this.state.time}
             flags={this.state.flags}
             run={this.state.run}
             reset={this.reset}/>
+          <Message status={this.state.status}/>
         </div>
       </div>
     );
