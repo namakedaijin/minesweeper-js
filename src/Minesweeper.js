@@ -67,6 +67,11 @@ export default class MineSweeper extends React.Component{
     clearInterval(this.timer);
   }
 
+  loseAction = () => {
+    this.setState({run: false, status: "lose"});
+    clearInterval(this.timer);
+  }
+
   timeIncrement = () => {
     this.setState((state) => {
       return {time: state.time + 1};
@@ -82,7 +87,6 @@ export default class MineSweeper extends React.Component{
     if((nextState.openedCells === (this.state.rows*this.state.colums-this.state.mines))&&nextState.run){
         this.winAction();
     }
-    console.log(nextState.openedCells, this.state.rows*this.state.colums-this.state.mines, nextState.run);
 }
 
   render(){
@@ -97,7 +101,8 @@ export default class MineSweeper extends React.Component{
             run={this.state.run}
             onCellClicked={this.onCellClicked}
             onCellRightClicked={this.onCellRightClicked}
-            winAction={this.winAction}/>
+            winAction={this.winAction}
+            loseAction={this.loseAction}/>
           <Statusbar 
             time={this.state.time}
             flags={this.state.flags}

@@ -39,13 +39,17 @@ export default class Board extends React.Component{
         if(this.props.openedCells === 0 && !this.props.run){
             this.setMines(copyBoard, cell);
         }
-        if(!cell.isOpened && !cell.hasFlag){
-            cell.isOpened = true;
-            if(cell.number === 0){
-                this.openRecursive(copyBoard, cell);
+        if(!cell.hasMine){
+            if(!cell.isOpened && !cell.hasFlag){
+                cell.isOpened = true;
+                if(cell.number === 0){
+                    this.openRecursive(copyBoard, cell);
+                }
+                this.updateBoardState(copyBoard);
+                this.props.onCellClicked();
             }
-            this.updateBoardState(copyBoard);
-            this.props.onCellClicked();
+        }else{
+            this.loseAction(copyBoard);
         }
     }
 
@@ -56,11 +60,17 @@ export default class Board extends React.Component{
                     &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
                     &&(i != 0 || j != 0)){
                         let aroundCell = copyBoard[cell.y+i][cell.x+j];
-                        if(!aroundCell.isOpened && !aroundCell.hasFlag){
-                            aroundCell.isOpened = true;
-                            this.props.onCellClicked();
-                            if(aroundCell.number === 0){
-                                this.openRecursive(copyBoard, aroundCell);
+                        if(!aroundCell.hasMine){
+                            if(!aroundCell.isOpened && !aroundCell.hasFlag){
+                                aroundCell.isOpened = true;
+                                this.props.onCellClicked();
+                                if(aroundCell.number === 0){
+                                    this.openRecursive(copyBoard, aroundCell);
+                                }
+                            }
+                        }else{
+                            if(!aroundCell.hasFlag){
+                                this.loseAction(copyBoard);
                             }
                         }
                     }
@@ -97,6 +107,20 @@ export default class Board extends React.Component{
                 }
             }
         }
+    }
+
+    loseAction = (board) => {
+        for(let i = 0; i < this.props.rows; i++){
+            for(let j = 0; j < this.props.colums; j++){
+                let cell = board[i][j];
+                if(!cell.isOpened){
+                    cell.isOpened = true;
+                    this.props.onCellClicked();
+                }
+            }
+        }
+        this.updateBoardState(board);
+        this.props.loseAction();
     }
 
     onDoubleClicked = (clickedCell) => {
