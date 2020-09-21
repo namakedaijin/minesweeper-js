@@ -57,7 +57,7 @@ export default class Board extends React.Component{
                         &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
                         &&(i != 0 || j != 0)){
                             let aroundCell = copyBoard[cell.y+i][cell.x+j];
-                            if(!aroundCell.isOpened){
+                            if(!aroundCell.isOpened && !aroundCell.hasFlag){
                                 aroundCell.isOpened = true;
                                 this.openRecursive(copyBoard, aroundCell);
                             }
@@ -98,6 +98,27 @@ export default class Board extends React.Component{
         }
     }
 
+    onDoubleClicked = (clickedCell) => {
+        let copyBoard = this.getCopyBoard();
+        let cell = copyBoard[clickedCell.y][clickedCell.x];
+        if(this.countAroundFlag(copyBoard, cell) === cell.number){
+            for(let i = -1; i <= 1; i++){
+                for(let j = -1; j <= 1; j++){
+                    if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
+                        &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
+                        &&(i != 0 || j != 0)){
+                            let aroundCell = copyBoard[cell.y+i][cell.x+j];
+                            if(!aroundCell.isOpened && !aroundCell.hasFlag){
+                                aroundCell.isOpened = true;
+                                this.openRecursive(copyBoard, aroundCell);
+                            }
+                        }
+                }
+            }
+            this.updateBoardState(copyBoard);
+        }
+    }
+
     requestFlagToCell = (clickedCell) => {
         this.props.onCellRightClicked(clickedCell);
         if(this.props.run){
@@ -110,6 +131,23 @@ export default class Board extends React.Component{
             }
             this.updateBoardState(copyBoard);
         }
+    }
+
+    countAroundFlag = (board, cell) => {
+        let flagCount = 0;
+        for(let i = -1; i <= 1; i++){
+            for(let j = -1; j <= 1; j++){
+                if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
+                    &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
+                    &&(i != 0 || j != 0)){
+                        let aroundCell = board[cell.y+i][cell.x+j];
+                        if(aroundCell.hasFlag){
+                            flagCount++;
+                        }
+                    }
+            }
+        }
+        return flagCount;
     }
 
     getCopyBoard = () => {
@@ -140,6 +178,7 @@ export default class Board extends React.Component{
                         key={index}
                         onCellClicked={this.openCell}
                         onCellRightClicked={this.requestFlagToCell}
+                        onDoubleClicked={this.onDoubleClicked}
                     />
                 </div>
             );

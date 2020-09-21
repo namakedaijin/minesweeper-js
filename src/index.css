@@ -47,6 +47,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
+  user-select: none;
 }
 
 .closed_cell {
@@ -56,6 +57,7 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
   background-color: #87ceeb;
+  user-select: none;
 }
 
 .hasMine_cell {
@@ -65,6 +67,7 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
   background-color: #f7343d;
+  user-select: none;
 }
 
 .hasFlag_cell {
@@ -74,6 +77,7 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
   background-color: #1ed637;
+  user-select: none;
 }
 
 .status_bar {
@@ -88,6 +92,7 @@ body {
   height: 24px;
   border-radius: 5px;
   background-color: #ffffff;
+  user-select: none;
 }
 
 .reset_button {

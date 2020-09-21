@@ -7,15 +7,14 @@ export default class Row extends React.Component{
     }
 
     render(){
-        //console.log("on render row");
         let cells = this.props.cells.map((cell, index) => {
-            //console.log(cell);
             return (
                 <Cell 
                     stat={cell}
                     key={index}
                     onCellClicked={this.props.onCellClicked}
                     onCellRightClicked={this.props.onCellRightClicked}
+                    onDoubleClicked={this.props.onDoubleClicked}
                 />
             );
         });
