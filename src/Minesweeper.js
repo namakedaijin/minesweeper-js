@@ -58,7 +58,7 @@ export default class MineSweeper extends React.Component{
         return {openedCells: state.openedCells + 1};
       });
     }
-    if(!this.state.run && this.state.openedCells == 0){
+    if(!this.state.run && this.state.openedCells === 0){
       clearInterval(this.timer);
       this.timer = setInterval(this.timeIncrement, 1000);
       this.setState((state) => {

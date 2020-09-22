@@ -1,9 +1,6 @@
 import React from 'react';
 
 export default class Cell extends React.Component{
-    constructor(props){
-        super(props);
-    }
     onCellClicked = () => {
         this.props.onCellClicked(this.props.stat);
     }

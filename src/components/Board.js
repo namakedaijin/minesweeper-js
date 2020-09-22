@@ -66,7 +66,7 @@ export default class Board extends React.Component{
             for(let j = -1; j <= 1; j++){
                 if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
                     &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
-                    &&(i != 0 || j != 0)){
+                    &&(i !== 0 || j !== 0)){
                         let aroundCell = copyBoard[cell.y+i][cell.x+j];
                         if(!aroundCell.hasMine){
                             if(!aroundCell.isOpened && !aroundCell.hasFlag){
@@ -89,7 +89,7 @@ export default class Board extends React.Component{
     setMines = (board, clickedCell) => {
         let mines = this.props.mines;
         let copyBoard = board;
-        loop: while(mines != 0){
+        loop: while(mines !== 0){
             let randX = Math.floor(Math.random() * this.props.colums);
             let randY = Math.floor(Math.random() * this.props.rows);
             for(let i = -1; i <= 1; i++){
@@ -107,7 +107,7 @@ export default class Board extends React.Component{
                     for(let j = -1; j <= 1; j++){
                         if((randX + j >= 0)&&(randX + j <= this.props.colums-1)
                         &&(randY + i >= 0)&&(randY + i <= this.props.rows-1)
-                        &&(i != 0 || j != 0)){
+                        &&(i !== 0 || j !== 0)){
                             let aroundCell = copyBoard[randY + i][randX + j];
                             aroundCell.number++;
                         }
@@ -162,7 +162,7 @@ export default class Board extends React.Component{
             for(let j = -1; j <= 1; j++){
                 if((cell.x + j >= 0)&&(cell.x + j <= this.props.colums-1)
                     &&(cell.y + i >= 0)&&(cell.y + i <= this.props.rows-1)
-                    &&(i != 0 || j != 0)){
+                    &&(i !== 0 || j !== 0)){
                         let aroundCell = board[cell.y+i][cell.x+j];
                         if(aroundCell.hasFlag){
                             flagCount++;
@@ -182,17 +182,17 @@ export default class Board extends React.Component{
     }
 
     componentWillUpdate = (nextProps, nextState) => {
-        if((this.props.openedCells != 0 && nextProps.openedCells == 0)
-            ||(this.props.colums != nextProps.colums)){
+        if((this.props.openedCells !== 0 && nextProps.openedCells === 0)
+            ||(this.props.colums !== nextProps.colums)){
             this.reset(nextProps);
         }
     }
 
     shouldComponentUpdate(nextProps, nextState){
         return !_.isEqual(nextState.board, this.state.board)
-                ||(this.props.openedCells!=nextProps.openedCells)
-                ||(this.props.run!=nextProps.run)
-                ||(this.props.mode!=nextProps.mode);
+                ||(this.props.openedCells!==nextProps.openedCells)
+                ||(this.props.run!==nextProps.run)
+                ||(this.props.mode!==nextProps.mode);
     }
 
     render(){

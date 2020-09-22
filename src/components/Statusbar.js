@@ -5,9 +5,6 @@ import FlagCounter from './FlagCounter';
 import Option from './Option';
 
 export default class Statusbar extends React.Component{
-    constructor(props){
-        super(props);
-    }
     render(){
         return (
             <div className="status_bar">
