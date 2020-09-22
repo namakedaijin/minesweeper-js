@@ -14,22 +14,42 @@ export default class MineSweeper extends React.Component{
       time: 0,
       run: false,
       openedCells: 0,
-      status: ""
+      status: "",
+      mode: "Easy"
     };
   }
 
-  initialize = () => {
-    this.setState(
-      {rows: 9,
-      colums: 9,
-      mines: 10,
-      flags: 10,
+  initialize = (mode) => {
+    this.setState((state) => {
+      if(mode === "Easy"){
+        return (
+          {rows: 9,
+          colums: 9,
+          mines: 10,
+          flags: 10}
+        );
+      }else if(mode === "Normal"){
+        return (
+          {rows: 16,
+          colums: 16,
+          mines: 40,
+          flags: 40}
+        );
+      }else{
+        return (
+          {rows: 16,
+          colums: 30,
+          mines: 99,
+          flags: 99}
+        );
+      }
+    });
+    this.setState({
       time: 0,
       run: false,
       openedCells: 0,
-      status: ""
-      }
-    );
+      status: "",
+    });
   }
 
   onCellClicked = () => {
@@ -62,6 +82,12 @@ export default class MineSweeper extends React.Component{
     }
   }
 
+  changeMode = (mode) => {
+    clearInterval(this.timer);
+    this.setState({mode: mode});
+    this.initialize(mode);
+  }
+
   winAction = () => {
     this.setState({run: false, status: "win"});
     clearInterval(this.timer);
@@ -80,7 +106,7 @@ export default class MineSweeper extends React.Component{
 
   reset = () => {
     clearInterval(this.timer);
-    this.initialize();
+    this.initialize(this.state.mode);
   }
 
   componentWillUpdate = (nextProps, nextState) => {
@@ -102,12 +128,15 @@ export default class MineSweeper extends React.Component{
             onCellClicked={this.onCellClicked}
             onCellRightClicked={this.onCellRightClicked}
             winAction={this.winAction}
-            loseAction={this.loseAction}/>
+            loseAction={this.loseAction}
+            mode={this.state.mode}/>
           <Statusbar 
             time={this.state.time}
             flags={this.state.flags}
             run={this.state.run}
-            reset={this.reset}/>
+            reset={this.reset}
+            mode={this.state.mode}
+            onChangeMode={this.changeMode}/>
           <Message status={this.state.status}/>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import Timer from './Timer';
 import ResetButton from './ResetButton';
 import FlagCounter from './FlagCounter';
+import Option from './Option';
 
 export default class Statusbar extends React.Component{
     constructor(props){
@@ -17,6 +18,9 @@ export default class Statusbar extends React.Component{
                 <ResetButton
                     reset={() => this.props.reset()}
                 />
+                <Option 
+                    mode={this.props.mode}
+                    onChangeMode={this.props.onChangeMode}/>
                 <FlagCounter 
                     flags={this.props.flags}
                 />

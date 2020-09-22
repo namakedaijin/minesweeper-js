@@ -38,18 +38,26 @@ export default class Board extends React.Component{
         let cell = copyBoard[clickedCell.y][clickedCell.x];
         if(this.props.openedCells === 0 && !this.props.run){
             this.setMines(copyBoard, cell);
+            cell.isOpened = true;
+                    if(cell.number === 0){
+                        this.openRecursive(copyBoard, cell);
+                    }
+                    this.updateBoardState(copyBoard);
+                    this.props.onCellClicked();
         }
-        if(!cell.hasMine){
-            if(!cell.isOpened && !cell.hasFlag){
-                cell.isOpened = true;
-                if(cell.number === 0){
-                    this.openRecursive(copyBoard, cell);
+        if(this.props.run){
+            if(!cell.hasMine){
+                if(!cell.isOpened && !cell.hasFlag){
+                    cell.isOpened = true;
+                    if(cell.number === 0){
+                        this.openRecursive(copyBoard, cell);
+                    }
+                    this.updateBoardState(copyBoard);
+                    this.props.onCellClicked();
                 }
-                this.updateBoardState(copyBoard);
-                this.props.onCellClicked();
+            }else{
+                this.loseAction(copyBoard);
             }
-        }else{
-            this.loseAction(copyBoard);
         }
     }
 
@@ -124,11 +132,13 @@ export default class Board extends React.Component{
     }
 
     onDoubleClicked = (clickedCell) => {
-        let copyBoard = this.getCopyBoard();
-        let cell = copyBoard[clickedCell.y][clickedCell.x];
-        if(this.countAroundFlag(copyBoard, cell) === cell.number){
-            this.openRecursive(copyBoard, cell);
-            this.updateBoardState(copyBoard);
+        if(this.props.run){
+            let copyBoard = this.getCopyBoard();
+            let cell = copyBoard[clickedCell.y][clickedCell.x];
+            if(this.countAroundFlag(copyBoard, cell) === cell.number){
+                this.openRecursive(copyBoard, cell);
+                this.updateBoardState(copyBoard);
+            }
         }
     }
 
@@ -172,7 +182,8 @@ export default class Board extends React.Component{
     }
 
     componentWillUpdate = (nextProps, nextState) => {
-        if(this.props.openedCells != 0 && nextProps.openedCells == 0){
+        if((this.props.openedCells != 0 && nextProps.openedCells == 0)
+            ||(this.props.colums != nextProps.colums)){
             this.reset(nextProps);
         }
     }
@@ -180,7 +191,8 @@ export default class Board extends React.Component{
     shouldComponentUpdate(nextProps, nextState){
         return !_.isEqual(nextState.board, this.state.board)
                 ||(this.props.openedCells!=nextProps.openedCells)
-                ||(this.props.run!=nextProps.run);
+                ||(this.props.run!=nextProps.run)
+                ||(this.props.mode!=nextProps.mode);
     }
 
     render(){
